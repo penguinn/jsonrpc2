@@ -1,11 +1,8 @@
-// +build !go1.7
-
 package jsonrpc2
 
 import (
+	"context"
 	"encoding/json"
-
-	"golang.org/x/net/context"
 )
 
 // Func links a method of JSON-RPC request.

@@ -25,7 +25,7 @@ type (
 		Params  *json.RawMessage `json:"params"`
 	}
 
-	// A Response represents a JSON-RPC response returned by the server.
+	// A Response represents a JSON-RPC Resp returned by the server.
 	Response struct {
 		ID      *json.RawMessage `json:"id,omitempty"`
 		Version string           `json:"jsonrpc"`
@@ -73,7 +73,7 @@ func ParseRequest(r *http.Request) ([]Request, bool, *Error) {
 	return rs, true, nil
 }
 
-// NewResponse generates a JSON-RPC response.
+// NewResponse generates a JSON-RPC Resp.
 func NewResponse(r Request) Response {
 	res := Response{
 		Version: r.Version,
@@ -84,7 +84,7 @@ func NewResponse(r Request) Response {
 	return res
 }
 
-// SendResponse writes JSON-RPC response.
+// SendResponse writes JSON-RPC Resp.
 func SendResponse(w http.ResponseWriter, resp []Response, batch bool) error {
 
 	w.Header().Set(contentTypeKey, contentTypeValue)

@@ -1,18 +1,15 @@
-// +build !go1.7
-
 package jsonrpc2
 
 import (
+	"context"
 	"net/http"
-
-	"golang.org/x/net/context"
 )
 
 // Filter runs before invoke a method.
 var Filter func(context.Context, *Request) *Error
 
 // Handler provides basic JSON-RPC handling.
-func Handler(c context.Context, w http.ResponseWriter, r *http.Request) {
+func Handler(w http.ResponseWriter, r *http.Request) {
 
 	rs, batch, err := ParseRequest(r)
 	if err != nil {
@@ -36,14 +33,14 @@ func Handler(c context.Context, w http.ResponseWriter, r *http.Request) {
 		}
 
 		if Filter != nil {
-			res.Error = Filter(c, &rs[i])
+			res.Error = Filter(r.Context(), &rs[i])
 			if res.Error != nil {
 				resp[i] = res
 				continue
 			}
 		}
 
-		res.Result, res.Error = f(c, rs[i].Params)
+		res.Result, res.Error = f(r.Context(), rs[i].Params)
 		resp[i] = res
 	}
 

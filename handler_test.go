@@ -1,9 +1,8 @@
-// +build !go1.7
-
 package jsonrpc2
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -11,19 +10,17 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"golang.org/x/net/context"
 )
 
-func TestHandler(t *testing.T) {
+func TestHandler17(t *testing.T) {
 
 	PurgeMethods()
 
-	c := context.Background()
 	rec := httptest.NewRecorder()
 	r, err := http.NewRequest("", "", nil)
 	require.NoError(t, err)
 
-	Handler(c, rec, r)
+	Handler(rec, r)
 
 	res := Response{}
 	err = json.NewDecoder(rec.Body).Decode(&res)
@@ -35,7 +32,7 @@ func TestHandler(t *testing.T) {
 	require.NoError(t, err)
 	r.Header.Set("Content-Type", "application/json")
 
-	Handler(c, rec, r)
+	Handler(rec, r)
 	res = Response{}
 	err = json.NewDecoder(rec.Body).Decode(&res)
 	require.NoError(t, err)
@@ -50,7 +47,7 @@ func TestHandler(t *testing.T) {
 	require.NoError(t, err)
 	r.Header.Set("Content-Type", "application/json")
 
-	Handler(c, rec, r)
+	Handler(rec, r)
 	res = Response{}
 	err = json.NewDecoder(rec.Body).Decode(&res)
 	require.NoError(t, err)
@@ -68,7 +65,7 @@ func TestHandler(t *testing.T) {
 		return nil
 	}
 
-	Handler(c, rec, r)
+	Handler(rec, r)
 	res = Response{}
 	err = json.NewDecoder(rec.Body).Decode(&res)
 	require.NoError(t, err)
@@ -84,7 +81,7 @@ func TestHandler(t *testing.T) {
 		return ErrInternal()
 	}
 
-	Handler(c, rec, r)
+	Handler(rec, r)
 	res = Response{}
 	err = json.NewDecoder(rec.Body).Decode(&res)
 	require.NoError(t, err)
